@@ -1,0 +1,15 @@
+{
+  "shell": true,
+  "selector": "source.lf",
+
+  "variants": [{
+    "name": "List",
+    "cmd": ["ride cli list"]
+  },{
+    "name": "Start",
+    "cmd": ["ride cli start -t $file_base_name"]
+  },{
+    "name": "Stop",
+    "cmd": ["ride cli stop"]
+  }]
+}
