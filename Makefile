@@ -1,4 +1,4 @@
-DESTDIR=$HOME/.config/sublime-text-3/Packages/
+DESTDIR='$(HOME)/.config/sublime-text-3/Packages/'
 
 install:
 	@mkdir -p $(DESTDIR)/RIDE
