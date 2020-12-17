@@ -1,0 +1,252 @@
+%YAML 1.2
+---
+# http://www.sublimetext.com/docs/3/syntax.html
+name: Lingua Franka
+file_extensions:
+  - lf
+scope: source.lf
+contexts:
+  main:
+    - include: parameter
+    - include: normalState
+    - include: link
+    - include: comment
+  comment:
+    - match: "--.*$"
+      comment: Single-line comments
+      scope: comment.line.double-dash
+  barrier:
+    - match: '(barrier)\s*([_a-zA-Z][_a-zA-Z0-9]*)\s*{'
+      comment: Barrier
+      captures:
+        1: keyword.other.barrier.lf
+        2: entity.name.type.barrier.lf
+      push:
+        - match: "}"
+          pop: true
+        - match: '^\s*(->)\s*([_a-zA-Z][_a-zA-Z0-9]*)'
+          captures:
+            1: keyword.control.barrier.lf
+            2: entity.name.type.target.lf
+        - include: comment
+  builtin:
+    - match: \b(service|event|operation|child|port)\s*\(
+      comment: Built-in functions
+      captures:
+        1: support.function.lf
+    - match: \b(?:parent|parameter|result|variable)\b
+      comment: Built-in variables
+      scope: support.variable.lf
+  clientData:
+    - match: '^\s*(clientData)\s*{'
+      comment: Client data blocks
+      captures:
+        1: keyword.other.clientdata.lf
+      push:
+        - match: "}"
+          pop: true
+        - include: image
+        - include: contextMenu
+        - include: description
+        - include: expression
+  contextMenu:
+    - match: 'contextMenu\s*:\s+@{'
+      comment: Embedded HTML in context menus
+      push:
+        - meta_content_scope: meta.embedded.block.html
+        - match: "}@;"
+          pop: true
+        - match: (<)(viewmodel)(>)
+          comment: Highlighting for <viewmodel> (does not support attributes)
+          captures:
+            0: meta.tag.metadata.script.start.html
+            1: punctuation.definition.tag.begin.html
+            2: entity.name.tag.html
+            3: punctuation.definition.tag.end.html
+          push:
+            - meta_scope: meta.embedded.block.html
+            - meta_content_scope: source.js
+            - match: (</)(viewmodel)(>)
+              captures:
+                0: meta.tag.metadata.script.end.html
+                1: punctuation.definition.tag.begin.html
+                2: entity.name.tag.html
+                3: punctuation.definition.tag.end.html
+              pop: true
+            - include: scope:source.js
+        - include: scope:text.html.basic
+  description:
+    - match: 'description\s*:\s+@{'
+      comment: Embedded Markdown in description blocks
+      push:
+        - meta_content_scope: meta.embedded.block.markdown
+        - match: "}@;"
+          pop: true
+        - include: scope:text.html.markdown
+  expression:
+    - include: comment
+    - include: builtin
+    - include: operator
+    - include: literal
+    - match: "{"
+      comment: Nesting
+      push:
+        - match: "}"
+          pop: true
+        - include: expression
+  image:
+    - match: 'image\s*:\s+@{'
+      comment: Embedded SVG in image blocks
+      push:
+        - meta_content_scope: meta.embedded.block.html
+        - match: "}@;"
+          pop: true
+        - include: scope:text.html.basic
+        - include: scope:text.html.basic
+  link:
+    - match: '([_a-zA-Z][_a-zA-Z0-9]*)\s*(<-)\s*([_a-zA-Z][_a-zA-Z0-9]*)\s*{'
+      comment: Link
+      captures:
+        1: entity.name.type.link.lf
+        2: keyword.other.link.lf
+        3: entity.other.inherited-class.lf
+      push:
+        - match: "}"
+          pop: true
+        - include: clientData
+        - include: portDeclaration
+        - include: comment
+  literal:
+    - match: '"'
+      comment: 'Single-line string literals, e.g. "Error: \"collision\""'
+      push:
+        - meta_scope: constant.character.escape.lf
+        - match: '"'
+          pop: true
+    - match: \b(?:true|false)\b
+      comment: Boolean literals
+      scope: constant.language.lf
+    - match: \b(?:nil)\b
+      comment: Nil literal
+      scope: constant.language.lf
+    - match: \b\d?\\.\d+\b
+      comment: Float literals, e.g. 0.2
+      scope: constant.numeric.lf
+    - match: \b\d+\b
+      comment: Integer literals, e.g. 123
+      scope: constant.numeric.lf
+  lua:
+    - match: ^\s*(entry|exit|action)
+      comment: Entry/exit keywords
+      scope: keyword.other.lua.lf
+    - match: "@{"
+      comment: Multi-line Lua blocks
+      push:
+        - meta_content_scope: meta.embedded.block.lua
+        - match: "}@"
+          pop: true
+        - include: scope:source.lua
+    - match: (?<=entry|exit)\s*"
+      comment: Single-line entry/exit Lua strings
+      push:
+        - meta_content_scope: meta.embedded.inline.lua
+        - match: $|"
+          pop: true
+        - include: scope:source.lua
+  normalState:
+    - match: '([_a-zA-Z][_a-zA-Z0-9]*)\s*{'
+      comment: Normal state
+      captures:
+        1: entity.name.type.state.lf
+      push:
+        - match: "}"
+          pop: true
+        - include: clientData
+        - include: portDefinition
+        - include: typeDeclaration
+        - include: lua
+        - include: state
+        - include: expression
+  operator:
+    - match: (?<=\s)(==|~=|<=?|>=?|and|or|not)(?=\s)
+      comment: Space-separated operators
+      captures:
+        1: keyword.operator.lf
+    - match: '\+|-|\*|\/|#'
+      comment: Inline operators
+      scope: keyword.operator.lf
+  parameter:
+    - match: '\b(where)\s*{'
+      comment: Multi-line where block
+      captures:
+        1: keyword.other.parameter.lf
+      push:
+        - match: "}"
+          pop: true
+        - include: expression
+    - match: \b(where)\s+
+      comment: Single-line where expression
+      captures:
+        1: keyword.other.parameter.lf
+      push:
+        - match: $
+          pop: true
+        - include: expression
+  portDeclaration:
+    - match: '^\s*(port)\s+([_a-zA-Z][_a-zA-Z0-9]*)\s*(->)\s*([_a-zA-Z][_a-zA-Z0-9]*)'
+      comment: Port declaration (without condition) and required connection
+      captures:
+        1: keyword.other.port.lf
+        2: entity.name.function.port.lf
+        3: keyword.control.port.lf
+        4: entity.name.type.target.lf
+  portDefinition:
+    - match: '^\s*(port)\s+([_a-zA-Z][_a-zA-Z0-9]*)'
+      captures:
+        1: keyword.other.port.lf
+        2: entity.name.function.port.lf
+    - match: '(->)\s*([_a-zA-Z][_a-zA-Z0-9]*)'
+      captures:
+        1: keyword.control.port.lf
+        2: entity.name.type.target.lf
+  state:
+    - match: "(-->)(?=.*{)"
+      comment: Start state arrow
+      captures:
+        1: keyword.control.start-state.lf
+    - include: parameter
+    - include: normalState
+    - include: link
+    - include: barrier
+  type:
+    - match: "{"
+      comment: Struct
+      push:
+        - match: "}"
+          pop: true
+        - include: type
+    - match: '\[(\d+)\]'
+      comment: Fixed/variable length array
+      captures:
+        1: constant.numeric.lf
+    - match: \b(int|string|float|bool)\b
+      comment: Primitive type
+      scope: support.type.lf
+    - include: comment
+  typeDeclaration:
+    - match: '^\s*(parameterType|resultType|variableType)\s*{'
+      comment: Bracket-delimited type declarations
+      captures:
+        1: keyword.other.type.lf
+      push:
+        - match: "}"
+          pop: true
+        - include: type
+    - match: ^\s*(parameterType|resultType|variableType)\s*
+      comment: Single-line type declarations
+      captures:
+        1: keyword.other.type.lf
+      push:
+        - match: $
+          pop: true
+        - include: type
