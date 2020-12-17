@@ -5,6 +5,7 @@ name: Lingua Franka
 file_extensions:
   - lf
 scope: source.lf
+
 contexts:
   main:
     - include: parameter
@@ -56,25 +57,26 @@ contexts:
         - meta_content_scope: meta.embedded.block.html
         - match: "}@;"
           pop: true
-        - match: (<)(viewmodel)(>)
-          comment: Highlighting for <viewmodel> (does not support attributes)
-          captures:
-            0: meta.tag.metadata.script.start.html
-            1: punctuation.definition.tag.begin.html
-            2: entity.name.tag.html
-            3: punctuation.definition.tag.end.html
-          push:
-            - meta_scope: meta.embedded.block.html
-            - meta_content_scope: source.js
+        - include: viewModel
+        - include: scope:text.html.basic
+  viewModel:
+    - match: '(<)(viewmodel)'
+      captures:
+        1: punctuation.definition.tag.begin.html
+        2: entity.name.tag.block.any.html
+      push:
+        - match: '>'
+          scope: punctuation.definition.tag.end.html
+          set:
             - match: (</)(viewmodel)(>)
               captures:
-                0: meta.tag.metadata.script.end.html
                 1: punctuation.definition.tag.begin.html
-                2: entity.name.tag.html
+                2: entity.name.tag.block.any.html
                 3: punctuation.definition.tag.end.html
               pop: true
-            - include: scope:source.js
-        - include: scope:text.html.basic
+            - match: (?=\S)
+              embed: scope:source.js
+              escape: (?=(?:\s*)?</viewmodel)
   description:
     - match: 'description\s*:\s+@{'
       comment: Embedded Markdown in description blocks
