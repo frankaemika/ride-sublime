@@ -6,6 +6,6 @@
     {"trigger": "entry\tEntry", "contents": "entry @{\n  $0\n}@"},
     {"trigger": "exit\tExit", "contents": "exit @{\n  $0\n}@"},
     {"trigger": "action\tAction", "contents": "action ${1:condition} @{\n  $0\n}@"},
-    {"trigger": "clientData\tClientData", "contents": "clientData {\n  \"${1:key}\": ${2:value}\n}"},
+    {"trigger": "clientData\tClientData", "contents": "clientData {\n  ${1:key}: ${2:value};\n}"},
   ]
 }

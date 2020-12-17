@@ -1,6 +1,6 @@
 # ride-sublime
 
-LF syntaxt highlighting for `sublime`.
+Sublime Text 3 package for Lingua Franka (LF) syntax highlighting, snippets and auto-completions.
 
 ## Installation
 

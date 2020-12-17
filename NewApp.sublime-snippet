@@ -3,11 +3,11 @@
 ${1:Name} {
   port Success true
   clientData {
-    "type": "app"
-    "name": "$1"
-    "contextMenu": @{
+    type: "app"
+    name: "$1"
+    contextMenu: @{
       <span>Context menu of skill $1</span>
-    }@
+    }@;
   }
 }
 ]]></content>

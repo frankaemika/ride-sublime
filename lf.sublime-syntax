@@ -79,7 +79,7 @@ contexts:
               escape: (?=(?:\s*)?</viewmodel)
   description:
     - match: 'description\s*:\s+@{(?=\n\s*)'
-      comment: Embedded Markdown in description blocks. Does not work well when first line is indented.
+      comment: Embedded Markdown in description blocks. Does not work well when first line of description block is indented.
       push:
         - match: "}@;"
           pop: true

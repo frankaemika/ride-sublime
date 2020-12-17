@@ -2,4 +2,4 @@
 
 ## 1.0.0 - UNRELEASED
 
-    * Initial release of LF syntax highlighting.
+    * Initial release of LF syntax highlighting, snippets and auto completions.
