@@ -78,13 +78,14 @@ contexts:
               embed: scope:source.js
               escape: (?=(?:\s*)?</viewmodel)
   description:
-    - match: 'description\s*:\s+@{'
-      comment: Embedded Markdown in description blocks
+    - match: 'description\s*:\s+@{(?=\n\s*)'
+      comment: Embedded Markdown in description blocks. Does not work well when first line is indented.
       push:
-        - meta_content_scope: meta.embedded.block.markdown
         - match: "}@;"
           pop: true
-        - include: scope:text.html.markdown
+        - match: (?=\n\s*)
+          embed: scope:text.html.markdown
+          escape: '(?=(?:\s*)?}@;)'
   expression:
     - include: comment
     - include: builtin
