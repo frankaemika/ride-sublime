@@ -163,15 +163,8 @@
 			<key>patterns</key>
 			<array>
 				<dict>
-					<key>begin</key>
-					<string>(&lt;)(viewmodel)(&gt;)</string>
-					<key>beginCaptures</key>
+					<key>captures</key>
 					<dict>
-						<key>0</key>
-						<dict>
-							<key>name</key>
-							<string>meta.tag.metadata.script.start.html</string>
-						</dict>
 						<key>1</key>
 						<dict>
 							<key>name</key>
@@ -180,54 +173,24 @@
 						<key>2</key>
 						<dict>
 							<key>name</key>
-							<string>entity.name.tag.html</string>
-						</dict>
-						<key>3 </key>
-						<dict>
-							<key>name</key>
-							<string>punctuation.definition.tag.end.html</string>
+							<string>entity.name.tag.block.any.html</string>
 						</dict>
 					</dict>
-					<key>comment</key>
-					<string>Highlighting for &lt;viewmodel&gt; (does not support attributes)</string>
-					<key>contentName</key>
-					<string>source.js</string>
-					<key>end</key>
-					<string>(&lt;/)(viewmodel)(&gt;)</string>
-					<key>endCaptures</key>
-					<dict>
-						<key>0</key>
-						<dict>
-							<key>name</key>
-							<string>meta.tag.metadata.script.end.html</string>
-						</dict>
-						<key>1</key>
-						<dict>
-							<key>name</key>
-							<string>punctuation.definition.tag.begin.html</string>
-						</dict>
-						<key>2</key>
-						<dict>
-							<key>name</key>
-							<string>entity.name.tag.html</string>
-						</dict>
-						<key>3</key>
-						<dict>
-							<key>name</key>
-							<string>punctuation.definition.tag.end.html</string>
-						</dict>
-					</dict>
-					<key>name</key>
-					<string>meta.embedded.block.html</string>
-					<key>patterns</key>
+					<key>match</key>
+					<string>(&lt;/?)({{block_tag_name}})</string>
+					<key>push</key>
 					<array>
 						<dict>
-							<key>include</key>
-							<string>source.js</string>
+							<key>meta_scope</key>
+							<string>meta.tag.block.any.html</string>
 						</dict>
 						<dict>
 							<key>include</key>
-							<string>text.html.basic</string>
+							<string>tag-end</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>tag-attributes</string>
 						</dict>
 					</array>
 				</dict>
@@ -251,7 +214,7 @@
 			<array>
 				<dict>
 					<key>include</key>
-					<string>text.html.markdown#inline</string>
+					<string>text.html.markdown</string>
 				</dict>
 			</array>
 		</dict>
@@ -369,17 +332,10 @@
 					<string>Single-line string literals, e.g. "Error: \"collision\""</string>
 					<key>end</key>
 					<string>"</string>
-					<key>includes</key>
-					<array>
-						<dict>
-							<key>match</key>
-							<string>\\.</string>
-							<key>name</key>
-							<string>constant.character.escape.lf</string>
-						</dict>
-					</array>
+					<key>match</key>
+					<string>\\.</string>
 					<key>name</key>
-					<string>string.quoted.double.lf</string>
+					<string>constant.character.escape.lf</string>
 				</dict>
 				<dict>
 					<key>comment</key>

@@ -3,7 +3,6 @@
 name: Lingua Franka
 scopeName: source.lf
 fileTypes: [lf]
-uuid: 138d7a37-da91-4258-a6bb-baf600a79eb7
 patterns:
   - include: "#parameter"
   - include: "#normalState"
@@ -128,9 +127,8 @@ repository:
         begin: '"'
         end: '"'
         name: string.quoted.double.lf
-        includes:
-          - match: '\\.'
-            name: constant.character.escape.lf
+        match: '\\.'
+        name: constant.character.escape.lf
       - comment: Boolean literals
         match: '\b(?:true|false)\b'
         name: constant.language.lf
@@ -242,7 +240,7 @@ repository:
     contentName: meta.embedded.block.markdown
     patterns:
       # Our embedded descriptions are usually indented, so Markdown block highlighting does not work
-      - include: "text.html.markdown#inline"
+      - include: "text.html.markdown"
   clientData:
     comment: Client data blocks
     begin: '^\s*(clientData)\s*{'
